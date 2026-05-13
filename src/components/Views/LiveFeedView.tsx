@@ -97,50 +97,96 @@ export const LiveFeedView = () => {
                 ))}
             </div>
 
-            {/* Feed Area */}
-            <div className="flex-1 bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col overflow-hidden relative">
-                <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">系统遥测日志</h3>
-                    <div className="flex gap-2">
-                        <button className="px-3 py-1 bg-[#0B0F1A] border border-white/5 rounded text-[9px] font-bold text-slate-500 uppercase tracking-widest hover:text-white transition-colors">暂停</button>
-                        <button className="px-3 py-1 bg-[#0B0F1A] border border-white/5 rounded text-[9px] font-bold text-slate-500 uppercase tracking-widest hover:text-white transition-colors">清除记录</button>
+            {/* Bottom Section: Feed + Tasks */}
+            <div className="flex-1 grid grid-cols-12 gap-6 overflow-hidden">
+                {/* Feed Area */}
+                <div className="col-span-8 bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col overflow-hidden relative">
+                    <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">系统遥测日志</h3>
+                        <div className="flex gap-2">
+                            <button className="px-3 py-1 bg-[#0B0F1A] border border-white/5 rounded text-[9px] font-bold text-slate-500 uppercase tracking-widest hover:text-white transition-colors">暂停</button>
+                            <button className="px-3 py-1 bg-[#0B0F1A] border border-white/5 rounded text-[9px] font-bold text-slate-500 uppercase tracking-widest hover:text-white transition-colors">清除记录</button>
+                        </div>
                     </div>
+
+                    <div 
+                        ref={scrollRef}
+                        className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar"
+                    >
+                        <AnimatePresence initial={false}>
+                            {feed.map((event, i) => (
+                                <motion.div
+                                    key={event.id}
+                                    initial={{ opacity: 0, y: -20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className={cn(
+                                        "p-4 rounded-xl border flex gap-4 items-start transition-all",
+                                        i === 0 ? "bg-white/[0.03] border-white/10" : "bg-transparent border-white/5"
+                                    )}
+                                >
+                                    <div 
+                                        className="w-2 h-2 rounded-full mt-1.5 shrink-0" 
+                                        style={{ backgroundColor: event.color, boxShadow: i === 0 ? `0 0 12px ${event.color}` : 'none' }} 
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-3 mb-1">
+                                            <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: event.color }}>{event.label}</span>
+                                            <span className="text-[9px] font-mono text-slate-600">{event.time}</span>
+                                            {i === 0 && <span className="bg-emerald-500/20 text-emerald-400 text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter">最新</span>}
+                                        </div>
+                                        <p className="text-[11px] text-slate-400 font-mono leading-relaxed truncate">{event.detail}</p>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+                    </div>
+                    
+                    {/* Decorative fade at bottom */}
+                    <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0d121f] to-transparent pointer-events-none" />
                 </div>
 
-                <div 
-                    ref={scrollRef}
-                    className="flex-1 overflow-y-auto space-y-4 pr-2 custom-scrollbar"
-                >
-                    <AnimatePresence initial={false}>
-                        {feed.map((event, i) => (
-                            <motion.div
-                                key={event.id}
-                                initial={{ opacity: 0, y: -20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className={cn(
-                                    "p-4 rounded-xl border flex gap-4 items-start transition-all",
-                                    i === 0 ? "bg-white/[0.03] border-white/10" : "bg-transparent border-white/5"
-                                )}
-                            >
-                                <div 
-                                    className="w-2 h-2 rounded-full mt-1.5 shrink-0" 
-                                    style={{ backgroundColor: event.color, boxShadow: i === 0 ? `0 0 12px ${event.color}` : 'none' }} 
-                                />
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-3 mb-1">
-                                        <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: event.color }}>{event.label}</span>
-                                        <span className="text-[9px] font-mono text-slate-600">{event.time}</span>
-                                        {i === 0 && <span className="bg-emerald-500/20 text-emerald-400 text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter">最新</span>}
+                {/* Tasks Area */}
+                <div className="col-span-4 bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col gap-6">
+                    <h3 className="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                        <Database size={14} className="text-blue-400" />
+                        活跃分析任务 (GEE)
+                    </h3>
+
+                    <div className="space-y-6">
+                        {[
+                            { name: "NDVI 季度合成 (2024 Q4)", progress: 45, status: "拉取 Landsat-9 影像...", eta: "2m" },
+                            { name: "水面自动分类提取", progress: 82, status: "执行 Otsu 分阈计算...", eta: "45s" },
+                            { name: "地表温度 (LST) 异常检测", progress: 15, status: "加载 MODIS 基准数据...", eta: "5m" },
+                        ].map((t, i) => (
+                            <div key={i} className="flex flex-col gap-3">
+                                <div className="flex justify-between items-start">
+                                    <div className="flex flex-col gap-1">
+                                        <span className="text-[11px] font-bold text-slate-300">{t.name}</span>
+                                        <span className="text-[9px] text-slate-500 font-mono uppercase italic">{t.status}</span>
                                     </div>
-                                    <p className="text-[11px] text-slate-400 font-mono leading-relaxed truncate">{event.detail}</p>
+                                    <span className="text-[10px] font-mono text-blue-400 font-bold">{t.progress}%</span>
                                 </div>
-                            </motion.div>
+                                <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                                    <motion.div 
+                                        className="h-full bg-blue-500" 
+                                        initial={{ width: 0 }}
+                                        animate={{ width: `${t.progress}%` }}
+                                        transition={{ duration: 1, ease: "easeOut" }}
+                                    />
+                                </div>
+                                <div className="flex justify-end italic">
+                                    <span className="text-[8px] text-slate-600 uppercase font-bold tracking-widest">预计剩余: {t.eta}</span>
+                                </div>
+                            </div>
                         ))}
-                    </AnimatePresence>
+                    </div>
+
+                    <div className="mt-auto p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+                        <p className="text-[10px] text-blue-400 leading-relaxed font-sans">
+                            <strong>GEE 提示:</strong> 正在通过云端引擎并行处理 1.2TB 原始观测数据。系统已自动缓存瓦片以优化渲染速度。
+                        </p>
+                    </div>
                 </div>
-                
-                {/* Decorative fade at bottom */}
-                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0d121f] to-transparent pointer-events-none" />
             </div>
         </div>
     );

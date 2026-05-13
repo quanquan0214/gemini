@@ -14,6 +14,8 @@ import { ThematicLayerSwitcher } from './ThematicLayerSwitcher';
 import { SpatialAnalysisTools } from './SpatialAnalysisTools';
 import { MapLegend } from './MapLegend';
 
+import { TimeSlider } from './TimeSlider';
+
 interface Props {
   className?: string;
   onMapClick?: (coord: [number, number]) => void;
@@ -67,6 +69,7 @@ export const MapViewport: React.FC<Props> = ({ className, onMapClick, layers }) 
       <ThematicLayerSwitcher />
       <SpatialAnalysisTools />
       <MapLegend />
+      <TimeSlider />
 
       {/* Map UI Overlay */}
       <div className="absolute bottom-6 right-6 flex flex-col gap-2 z-10">
