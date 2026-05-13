@@ -91,3 +91,34 @@ export const RadialGauge = ({ value, max = 1, label, color = C.emerald, size = 8
     </svg>
   );
 };
+
+export const AreaChart = ({ data, color = C.blue, height = 240 }: { data: any[], color?: string, height?: number }) => {
+  if (!data?.length) return null;
+  const W = 600, H = height;
+  const vals = data.map((d) => typeof d === 'object' ? d.v : d);
+  const min = Math.min(...vals), max = Math.max(...vals);
+  const range = max - min || 1;
+  const scale = (v: number) => H - ((v - min) / range) * H;
+  const pts = vals.map((v, i) => `${(i / (vals.length - 1)) * W},${scale(v)}`).join(" ");
+  const gradientId = `grad-${color.replace('#', '')}`;
+  
+  return (
+    <svg width="100%" height={H} viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ display: "block" }}>
+      <defs>
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.4" />
+          <stop offset="100%" stopColor={color} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <polygon
+        points={`0,${H} ${pts} ${W},${H}`}
+        fill={`url(#${gradientId})`}
+      />
+      <polyline points={pts} fill="none" stroke={color} strokeWidth="2" strokeLinejoin="round" />
+      {/* Grid horizontal */}
+      {[0, 0.25, 0.5, 0.75, 1].map(p => (
+        <line key={p} x1="0" y1={H * p} x2={W} y2={H * p} stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
+      ))}
+    </svg>
+  );
+};
