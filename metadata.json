@@ -1,0 +1,12 @@
+{
+  "name": "Poyang GIS Explorer",
+  "description": "An advanced geospatial analysis platform for Poyang Lake ecological monitoring, featuring real-time data streams, spatial analysis tools, and interactive thematic mapping.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "GIS Visualization",
+    "Spatial Analysis",
+    "Real-time Monitoring"
+  ]
+}
