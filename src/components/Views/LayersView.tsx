@@ -6,27 +6,27 @@ import { cn } from '@/src/lib/utils';
 export const LayersView = () => {
     const layerCategories = [
         {
-            title: 'Base Mapping',
+            title: '基础底图',
             layers: [
-                { id: 'osm', name: 'OpenStreetMap Standard', active: true, opacity: 100 },
-                { id: 'sat', name: 'Sentinel-2 L2A Mosaic', active: false, opacity: 80 },
-                { id: 'ter', name: 'Terrain Shaded Relief', active: false, opacity: 50 },
+                { id: 'osm', name: 'OpenStreetMap 标准', active: true, opacity: 100 },
+                { id: 'sat', name: 'Sentinel-2 L2A 影像', active: false, opacity: 80 },
+                { id: 'ter', name: '地形晕渲图', active: false, opacity: 50 },
             ]
         },
         {
-            title: 'Thematic Overlays',
+            title: '专题叠加',
             layers: [
-                { id: 'lulc', name: 'Land Cover Classification', active: true, opacity: 85 },
-                { id: 'hydro', name: 'Hydrological Network', active: false, opacity: 100 },
-                { id: 'precip', name: 'Precipitation Heatmap', active: false, opacity: 60 },
+                { id: 'lulc', name: '土地覆盖分类', active: true, opacity: 85 },
+                { id: 'hydro', name: '水文网络', active: false, opacity: 100 },
+                { id: 'precip', name: '降雨热力图', active: false, opacity: 60 },
             ]
         },
         {
-            title: 'Ecological Indices',
+            title: '生态指数',
             layers: [
-                { id: 'rsei', name: 'Ecological Quality (RSEI)', active: false, opacity: 90 },
-                { id: 'ndvi', name: 'Vegetation Health (NDVI)', active: false, opacity: 90 },
-                { id: 'lst', name: 'Surface Temp (LST)', active: false, opacity: 70 },
+                { id: 'rsei', name: '生态质量 (RSEI)', active: false, opacity: 90 },
+                { id: 'ndvi', name: '植被健康 (NDVI)', active: false, opacity: 90 },
+                { id: 'lst', name: '地表温度 (LST)', active: false, opacity: 70 },
             ]
         }
     ];
@@ -35,8 +35,8 @@ export const LayersView = () => {
         <div className="flex-1 flex flex-col gap-6 p-6 overflow-y-auto bg-[#0d121f]">
              <div className="flex items-end justify-between mb-2">
                 <div>
-                    <h2 className="text-2xl font-bold tracking-tight text-white uppercase">Layer Inventory</h2>
-                    <p className="text-slate-500 text-xs font-medium uppercase tracking-widest mt-1">Manage geospatial assets & rendering order</p>
+                    <h2 className="text-2xl font-bold tracking-tight text-white uppercase font-sans">图层清单</h2>
+                    <p className="text-slate-500 text-xs font-medium uppercase tracking-widest mt-1">管理地理空间资产与渲染顺序</p>
                 </div>
                 <div className="flex gap-2 p-1 bg-white/5 rounded-lg border border-white/10">
                     <button className="p-2 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"><LayoutGrid size={16} /></button>
@@ -55,11 +55,11 @@ export const LayersView = () => {
                     >
                         <div className="px-6 py-4 bg-white/5 border-b border-white/10 flex justify-between items-center">
                             <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">{cat.title}</h3>
-                            <button className="text-[10px] font-bold text-emerald-400 uppercase hover:underline">Select All</button>
+                            <button className="text-[10px] font-bold text-emerald-400 uppercase hover:underline">全选</button>
                         </div>
                         <div className="p-4 space-y-4">
                             {cat.layers.map(layer => (
-                                <div key={layer.id} className="p-4 bg-[#0B0F1A] border border-white/5 rounded-xl hover:border-emerald-500/30 transition-all group">
+                                <div key={layer.id} className="p-4 bg-[#0B0F1A] border border-white/5 rounded-xl hover:border-emerald-500/30 transition-all group font-sans">
                                     <div className="flex items-center justify-between mb-4">
                                         <div className="flex items-center gap-3">
                                             <div className={cn(
@@ -76,7 +76,7 @@ export const LayersView = () => {
                                     <div className="flex items-center justify-between gap-4">
                                         <div className="flex-1 flex flex-col gap-2">
                                             <div className="flex justify-between text-[8px] uppercase font-bold text-slate-600 tracking-wider">
-                                                <span>Opacity</span>
+                                                <span>透明度</span>
                                                 <span className="font-mono text-emerald-400">{layer.opacity}%</span>
                                             </div>
                                             <div className="h-1 bg-white/5 rounded-full overflow-hidden">
@@ -90,8 +90,8 @@ export const LayersView = () => {
                                 </div>
                             ))}
                         </div>
-                        <button className="w-full py-4 bg-white/5 border-t border-white/10 text-[10px] font-bold text-slate-500 uppercase tracking-widest hover:text-emerald-400 hover:bg-white/10 transition-all flex items-center justify-center gap-2">
-                            Load External WMS
+                        <button className="w-full py-4 bg-white/5 border-t border-white/10 text-[10px] font-bold text-slate-500 uppercase tracking-widest hover:text-emerald-400 hover:bg-white/10 transition-all flex items-center justify-center gap-2 font-sans">
+                            加载外部 WMS 服务
                             <ChevronRight size={12} />
                         </button>
                     </motion.div>
@@ -104,14 +104,14 @@ export const LayersView = () => {
                         <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center">
                             <LayersIcon size={20} className="text-emerald-400" />
                         </div>
-                        <div>
-                            <h4 className="text-sm font-bold text-white uppercase tracking-wider">GeoServer Connection: ACTIVE</h4>
-                            <p className="text-xs text-slate-500 mt-1">Syncing 14 feature classes via POYANG_WORKSPACE. Latency: 42ms</p>
+                        <div className="font-sans">
+                            <h4 className="text-sm font-bold text-white uppercase tracking-wider">GeoServer 连接: 已激活</h4>
+                            <p className="text-xs text-slate-500 mt-1">正在同步 POYANG_WORKSPACE 下的 14 个要素类。延迟: 42ms</p>
                         </div>
                     </div>
-                    <div className="flex gap-4">
-                        <button className="px-6 py-2.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-lg text-[10px] font-bold uppercase tracking-widest">Re-Index Service</button>
-                        <button className="px-6 py-2.5 bg-emerald-500 text-black rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-400">Add Data Source</button>
+                    <div className="flex gap-4 font-sans">
+                        <button className="px-6 py-2.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-lg text-[10px] font-bold uppercase tracking-widest">重索引服务</button>
+                        <button className="px-6 py-2.5 bg-emerald-500 text-black rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-400">添加数据源</button>
                     </div>
                 </div>
             </div>

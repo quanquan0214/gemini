@@ -11,13 +11,13 @@ const legendData = [
 export const MapLegend = () => {
     return (
         <div className="absolute bottom-24 left-6 z-10 bg-[#0B0F1A]/90 backdrop-blur-xl border border-white/10 rounded-xl p-4 shadow-2xl">
-            <h4 className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-3">Classification Key</h4>
+            <h4 className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-3">分类图例说明</h4>
             <div className="space-y-2">
                 {[
-                    { label: 'Deep Water', color: '#0ea5e9' },
-                    { label: 'Wetlands', color: '#10b981' },
-                    { label: 'Vegetation', color: '#047857' },
-                    { label: 'Barren Soil', color: '#d97706' },
+                    { label: '深水区', color: '#0ea5e9' },
+                    { label: '湿地保护区', color: '#10b981' },
+                    { label: '植被覆盖', color: '#047857' },
+                    { label: '裸露土地', color: '#d97706' },
                 ].map(item => (
                     <div key={item.label} className="flex items-center gap-3">
                         <div 

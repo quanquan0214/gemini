@@ -12,6 +12,8 @@ import {
   Box
 } from 'lucide-react';
 
+import { Radio } from 'lucide-react';
+
 interface SidebarItemProps {
   icon: React.ReactNode;
   label: string;
@@ -52,12 +54,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
     <aside className="w-64 border-r border-white/10 flex flex-col bg-[#0B0F1A] h-screen sticky top-0 z-50">
       <div className="p-6 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center shadow-lg shadow-emerald-500/20">
+            <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center shadow-lg shadow-emerald-500/20">
             <Activity size={20} className="text-black" strokeWidth={2.5} />
           </div>
           <div>
-            <h1 className="font-bold tracking-tight text-white uppercase text-sm leading-tight">EcoGIS</h1>
-            <span className="text-[10px] text-emerald-400 font-medium tracking-widest uppercase">Poyang Lake</span>
+            <h1 className="font-bold tracking-tight text-white uppercase text-sm leading-tight">生态地理信息系统</h1>
+            <span className="text-[10px] text-emerald-400 font-medium tracking-widest uppercase">鄱阳湖监测平台</span>
           </div>
         </div>
       </div>
@@ -65,25 +67,31 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
       <div className="flex-1 overflow-y-auto px-3 py-6 flex flex-col gap-1">
         <SidebarItem 
           icon={<MapIcon size={18} />} 
-          label="Explorer" 
+          label="地图探索" 
           active={activeTab === 'explorer'} 
           onClick={() => setActiveTab('explorer')}
         />
         <SidebarItem 
           icon={<Waves size={18} />} 
-          label="Hydrology" 
+          label="水文监测" 
           active={activeTab === 'hydrology'} 
           onClick={() => setActiveTab('hydrology')}
         />
         <SidebarItem 
+          icon={<Radio size={18} />} 
+          label="实时动态" 
+          active={activeTab === 'livefeed'} 
+          onClick={() => setActiveTab('livefeed')}
+        />
+        <SidebarItem 
           icon={<Leaf size={18} />} 
-          label="Land Cover" 
+          label="土地覆盖" 
           active={activeTab === 'landcover'} 
           onClick={() => setActiveTab('landcover')}
         />
         <SidebarItem 
           icon={<CloudRain size={18} />} 
-          label="Meteorology" 
+          label="气象分析" 
           active={activeTab === 'weather'} 
           onClick={() => setActiveTab('weather')}
         />
@@ -92,13 +100,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
 
         <SidebarItem 
           icon={<Box size={18} />} 
-          label="Analysis" 
+          label="空间分析" 
           active={activeTab === 'analysis'} 
           onClick={() => setActiveTab('analysis')}
         />
         <SidebarItem 
           icon={<Layers size={18} />} 
-          label="Layers" 
+          label="图层管理" 
           active={activeTab === 'layers'} 
           onClick={() => setActiveTab('layers')}
         />
@@ -107,7 +115,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
       <div className="p-4 border-t border-white/10">
         <SidebarItem 
           icon={<Settings size={18} />} 
-          label="Settings" 
+          label="系统设置" 
           active={activeTab === 'settings'} 
           onClick={() => setActiveTab('settings')}
         />

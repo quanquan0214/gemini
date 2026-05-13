@@ -25,7 +25,7 @@ export const SpatialAnalysisTools = () => {
         <div className="absolute top-20 right-6 z-10 bg-[#0B0F1A]/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl p-4 w-48">
             <h3 className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-4 flex items-center gap-2">
                 <Shapes size={12} className="text-emerald-400" />
-                Tools
+                空间分析工具
             </h3>
 
             <div className="grid grid-cols-2 gap-2">
@@ -41,7 +41,7 @@ export const SpatialAnalysisTools = () => {
                         )}
                     >
                         {tool.icon}
-                        {tool.name}
+                        {tool.id === 'measure' ? '测量' : tool.id === 'buffer' ? '缓冲区' : tool.id === 'clip' ? '裁剪' : '统计'}
                     </button>
                 ))}
             </div>
@@ -49,13 +49,13 @@ export const SpatialAnalysisTools = () => {
             {selectedTool && (
                 <div className="mt-4 p-3 bg-emerald-500/5 border border-emerald-500/20 rounded-lg">
                     <button className="w-full py-1.5 bg-emerald-500 text-black rounded text-[9px] font-bold uppercase tracking-widest">
-                        Execute
+                        开始执行
                     </button>
                     <button 
                         onClick={() => setSelectedTool(null)}
                         className="w-full mt-2 text-[8px] font-bold text-slate-500 hover:text-white transition-colors"
                     >
-                        REFRESH SYSTEM
+                        重置状态
                     </button>
                 </div>
             )}

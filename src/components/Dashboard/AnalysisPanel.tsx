@@ -1,6 +1,9 @@
 import React from 'react';
 import { cn } from '@/src/lib/utils';
-import { TrendingUp, TrendingDown, Info } from 'lucide-react';
+import { TrendingUp, TrendingDown, Info, Activity, Database } from 'lucide-react';
+import { Sparkline } from '../UI/Charts';
+
+const RSEI_DATA = [40, 55, 45, 70, 60, 85, 75, 40, 50, 65, 80, 55, 60];
 
 interface MetricProps {
   label: string;
@@ -34,39 +37,33 @@ export const AnalysisPanel = () => {
             <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2 bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col gap-3">
                     <div className="flex justify-between items-start">
-                        <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">RSEI Index Trend</h3>
+                        <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">RSEI 指数趋势</h3>
                         <span className="text-emerald-400 text-xs font-bold">+4.2%</span>
                     </div>
-                    <div className="h-24 flex items-end gap-1 px-1">
-                        {[40, 55, 45, 70, 60, 85, 75, 40].map((h, i) => (
-                            <div 
-                                key={i}
-                                className="bg-emerald-500/40 w-full rounded-t transition-all hover:bg-emerald-500 hover:scale-x-110" 
-                                style={{ height: `${h}%` }} 
-                            />
-                        ))}
+                    <div className="h-16 flex flex-col justify-end">
+                        <Sparkline data={RSEI_DATA} color="#10b981" height={64} filled />
                     </div>
-                    <div className="text-[9px] text-slate-500 text-center uppercase tracking-widest">Seasonal Vegetation Index Variance</div>
+                    <div className="text-[9px] text-slate-500 text-center uppercase tracking-widest mt-2">季节性植被指数方差分析</div>
                 </div>
 
                 <RealtimeMetricCard 
-                    label="Water Level"
+                    label="水位高度"
                     value="12.4"
-                    unit="m"
+                    unit="米"
                 />
                 <RealtimeMetricCard 
-                    label="Flood Risk"
+                    label="洪水风险"
                     value="15%"
-                    unit="lvl"
+                    unit="等级"
                     trend={-2.4}
                 />
 
                 <div className="col-span-2 bg-white/5 border border-white/10 rounded-xl p-4">
-                    <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-4">Spatial Distribution</h3>
+                    <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-4">空间要素分布</h3>
                     <div className="space-y-4">
                         <div className="flex flex-col gap-1.5">
                             <div className="flex justify-between text-[10px] uppercase font-bold tracking-tight">
-                                <span className="text-slate-400">Mudflats</span>
+                                <span className="text-slate-400">滩涂</span>
                                 <span className="text-emerald-400">35%</span>
                             </div>
                             <div className="w-full bg-white/5 h-1 rounded-full overflow-hidden">
@@ -75,7 +72,7 @@ export const AnalysisPanel = () => {
                         </div>
                         <div className="flex flex-col gap-1.5">
                             <div className="flex justify-between text-[10px] uppercase font-bold tracking-tight">
-                                <span className="text-slate-400">Open Water</span>
+                                <span className="text-slate-400">开阔水面</span>
                                 <span className="text-blue-400">52%</span>
                             </div>
                             <div className="w-full bg-white/5 h-1 rounded-full overflow-hidden">
@@ -84,7 +81,7 @@ export const AnalysisPanel = () => {
                         </div>
                         <div className="flex flex-col gap-1.5">
                             <div className="flex justify-between text-[10px] uppercase font-bold tracking-tight">
-                                <span className="text-slate-400">Vegetation</span>
+                                <span className="text-slate-400">植被覆盖</span>
                                 <span className="text-emerald-600">13%</span>
                             </div>
                             <div className="w-full bg-white/5 h-1 rounded-full overflow-hidden">
@@ -97,16 +94,16 @@ export const AnalysisPanel = () => {
                 <div className="col-span-2 bg-[#1A1F2E] border border-emerald-500/30 rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-3">
                         <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-                        <h3 className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Spatial Regression</h3>
+                        <h3 className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">空间回归模型</h3>
                     </div>
                     <div className="grid grid-cols-2 gap-y-2 text-[10px] font-mono">
-                        <div className="text-slate-500">R-Squared</div>
+                        <div className="text-slate-500">R平方 (R²)</div>
                         <div className="text-right text-white">0.892</div>
-                        <div className="text-slate-500">AIC Value</div>
+                        <div className="text-slate-500">AIC 分值</div>
                         <div className="text-right text-white">12.42k</div>
                     </div>
                     <button className="w-full mt-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 py-2.5 rounded-lg text-[10px] font-bold hover:bg-emerald-500 hover:text-black transition-all uppercase tracking-widest">
-                        Run Model
+                        执行区域分析
                     </button>
                 </div>
             </div>

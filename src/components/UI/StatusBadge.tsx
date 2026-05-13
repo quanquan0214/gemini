@@ -7,10 +7,10 @@ interface StatusBadgeProps {
 
 export const StatusBadge = ({ status }: StatusBadgeProps) => {
     const config = {
-        operational: { label: 'System Active', color: 'bg-emerald-500', text: 'text-emerald-400' },
-        alert: { label: 'Sync Alert', color: 'bg-orange-500', text: 'text-orange-400' },
-        maintenance: { label: 'Maintenance', color: 'bg-amber-500', text: 'text-amber-400' },
-        syncing: { label: 'Syncing...', color: 'bg-blue-500', text: 'text-blue-400' },
+        operational: { label: '系统运行正常', color: 'bg-emerald-500', text: 'text-emerald-400' },
+        alert: { label: '同步预警', color: 'bg-orange-500', text: 'text-orange-400' },
+        maintenance: { label: '图层维护中', color: 'bg-amber-500', text: 'text-amber-400' },
+        syncing: { label: '数据同步中...', color: 'bg-blue-500', text: 'text-blue-400' },
     };
 
     const { label, color, text } = config[status];

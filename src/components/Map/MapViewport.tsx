@@ -93,7 +93,7 @@ export const MapViewport: React.FC<Props> = ({ className, onMapClick, layers }) 
 
       <div className="absolute top-6 left-1/2 -translate-x-1/2 z-10">
         <div className="bg-slate-900/80 backdrop-blur-md px-4 py-1.5 border border-slate-700/50 rounded-full shadow-2xl text-[10px] uppercase font-bold tracking-[0.3em] text-blue-400">
-          Live Point Cloud Sync Enabled
+          已激活实时点云同步
         </div>
       </div>
 
