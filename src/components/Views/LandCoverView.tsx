@@ -1,143 +1,142 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Leaf, Map as MapIcon, Database, ArrowRight, TrendingUp, PieChart } from 'lucide-react';
+import { Layers, PieChart, Info, Download, Filter, Maximize2, Map as MapIcon, Database } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
-import { RadialGauge } from '../UI/Charts';
-
-const LAND_CLASSES = [
-    { name: '湿地/水域', area: '124,500', percent: 45, color: '#3b82f6' },
-    { name: '草丛/灌木', area: '68,200', percent: 25, color: '#10b981' },
-    { name: '裸地/滩涂', area: '42,300', percent: 15, color: '#f59e0b' },
-    { name: '人工建筑', area: '28,100', percent: 10, color: '#ef4444' },
-    { name: '其他', area: '14,000', percent: 5, color: '#64748b' },
-];
 
 export const LandCoverView = () => {
+    const categories = [
+        { name: 'Open Water', area: 2450.4, color: 'bg-blue-500', perc: 52 },
+        { name: 'Mudflats', area: 1040.2, color: 'bg-orange-600', perc: 22 },
+        { name: 'Wetlands', area: 660.8, color: 'bg-emerald-500', perc: 14 },
+        { name: 'Vegetation', area: 378.5, color: 'bg-green-700', perc: 8 },
+        { name: 'Barren/Urban', area: 189.2, color: 'bg-slate-500', perc: 4 },
+    ];
+
     return (
-        <div className="flex-1 flex flex-col gap-6 p-6 overflow-y-auto bg-[#0d121f]">
-            <div className="flex items-end justify-between mb-2">
-                <div>
-                    <h2 className="text-2xl font-bold tracking-tight text-white uppercase font-sans">土地利用分析 (LULC)</h2>
-                    <p className="text-slate-500 text-xs font-medium uppercase tracking-widest mt-1">多时序分类与生态演变监测 (基于 ESA 10m 数据)</p>
+        <div className="flex-1 flex flex-col gap-4 p-4 overflow-hidden bg-[#0d121f]">
+            {/* GIS Top Bar */}
+            <div className="flex items-center justify-between px-2">
+                <div className="flex items-center gap-4">
+                    <div className="flex flex-col">
+                        <h2 className="text-xl font-bold tracking-tight text-white uppercase font-sans">地表覆盖与土地利用分析</h2>
+                        <div className="flex items-center gap-3 mt-1">
+                            <span className="text-[9px] text-orange-400 font-bold uppercase tracking-widest px-2 py-0.5 bg-orange-500/10 rounded flex items-center gap-1.5">
+                                <Layers size={10} />
+                                LULC 分类任务 active
+                            </span>
+                            <span className="text-[9px] text-slate-500 font-mono uppercase">Sentinel-2 MSI Level-2A</span>
+                        </div>
+                    </div>
                 </div>
-                <div className="flex gap-3">
-                    <button className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 transition-colors flex items-center gap-2 font-sans">
-                        <TrendingUp size={14} />
-                        导出转移矩阵
+                <div className="flex gap-2">
+                    <button className="px-3 py-1.5 bg-white/5 border border-white/10 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 transition-colors flex items-center gap-2 font-sans group">
+                        <Filter size={12} />
+                        分类配置
+                    </button>
+                    <button className="px-3 py-1.5 bg-emerald-500 text-black rounded text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-400 transition-colors flex items-center gap-2 font-sans">
+                        <Database size={12} />
+                        训练模型
                     </button>
                 </div>
             </div>
 
-            <div className="grid grid-cols-12 gap-6">
-                {/* Stats */}
-                <div className="col-span-3 bg-white/5 border border-white/10 rounded-2xl p-6 bento-card flex flex-col justify-between">
-                    <div>
-                        <span className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">总调查面积</span>
-                        <p className="text-3xl font-light text-white mt-2">1,540.2 <span className="text-xs text-slate-500">km²</span></p>
-                    </div>
-                    <div className="mt-4 h-1.5 bg-white/5 rounded-full overflow-hidden">
-                        <div className="h-full w-full bg-blue-500 opacity-30" />
-                    </div>
-                </div>
-                <div className="col-span-3 bg-white/5 border border-white/10 rounded-2xl p-6 bento-card flex flex-col justify-between">
-                    <div>
-                        <span className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">植被覆盖率 (FVC)</span>
-                        <p className="text-3xl font-light text-emerald-400 mt-2">64.2%</p>
-                    </div>
-                    <div className="mt-4 h-1.5 bg-white/5 rounded-full overflow-hidden">
-                        <motion.div initial={{ width: 0 }} animate={{ width: '64.2%' }} className="h-full bg-emerald-500" />
-                    </div>
-                </div>
-                <div className="col-span-3 bg-white/5 border border-white/10 rounded-2xl p-6 bento-card flex flex-col justify-between">
-                    <div>
-                        <span className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">城镇扩张率</span>
-                        <p className="text-3xl font-light text-orange-400 mt-2">2.4% <span className="text-xs text-slate-500 font-sans italic">同比</span></p>
-                    </div>
-                    <div className="mt-4 h-1.5 bg-white/5 rounded-full overflow-hidden">
-                        <motion.div initial={{ width: 0 }} animate={{ width: '2.4%' }} className="h-full bg-orange-500" />
-                    </div>
-                </div>
-                <div className="col-span-3 bg-white/5 border border-white/10 rounded-2xl p-6 bento-card flex flex-col items-center justify-center">
-                    <RadialGauge value={0.88} label="分类精度 OA" color="#10b981" size={72} />
-                </div>
+            <div className="flex-1 grid grid-cols-12 gap-4 min-h-0">
+                {/* Left: Classification Map */}
+                <div className="col-span-12 lg:col-span-8 flex flex-col gap-4">
+                    <div className="flex-1 relative bg-slate-900 rounded-2xl border border-white/5 overflow-hidden group">
+                        {/* Map Overlay Simulation */}
+                        <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="text-center">
+                                <MapIcon size={48} className="text-emerald-500/20 mx-auto mb-3" />
+                                <p className="text-[10px] text-slate-600 font-bold uppercase tracking-[0.3em]">LULC 分类分布图层</p>
+                            </div>
+                        </div>
 
-                {/* Left: Detailed Classes */}
-                <div className="col-span-8 bg-white/5 border border-white/10 rounded-2xl p-8">
-                    <div className="flex justify-between items-center mb-8">
-                         <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2 font-sans text-emerald-400">
-                             <MapIcon size={16} />
-                             地表覆盖类型细分
-                         </h3>
-                         <span className="text-[10px] text-slate-500 font-mono italic">单位: Hectares (ha)</span>
-                    </div>
+                        {/* Map HUD Controls */}
+                        <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
+                            <div className="bg-slate-900/80 backdrop-blur-md p-1.5 border border-white/10 rounded-lg flex flex-col gap-1">
+                                {[1, 2, 3].map(i => (
+                                    <div key={i} className="w-6 h-6 rounded bg-white/5 flex items-center justify-center text-[10px] text-slate-400 hover:bg-white/10 cursor-pointer">
+                                        {i === 1 ? 'RGB' : i === 2 ? 'CIR' : 'CLS'}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
 
-                    <div className="space-y-6">
-                        {LAND_CLASSES.map((lc, i) => (
-                            <div key={i} className="flex flex-col gap-2">
-                                <div className="flex justify-between items-end">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: lc.color }} />
-                                        <span className="text-xs font-bold text-slate-300 font-sans tracking-wide">{lc.name}</span>
-                                    </div>
-                                    <div className="flex items-baseline gap-4">
-                                        <span className="text-xs font-mono text-slate-500">{lc.area}</span>
-                                        <span className="text-sm font-mono text-white font-bold w-12 text-right">{lc.percent}%</span>
-                                    </div>
-                                </div>
-                                <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                                    <motion.div 
-                                        initial={{ width: 0 }}
-                                        animate={{ width: `${lc.percent}%` }}
-                                        className="h-full rounded-full"
-                                        style={{ backgroundColor: lc.color }}
-                                    />
+                        {/* Legend Overlay */}
+                        <div className="absolute bottom-4 left-4 z-10">
+                            <div className="bg-slate-900/80 backdrop-blur-md p-3 border border-white/10 rounded-xl w-40">
+                                <div className="text-[9px] text-slate-500 font-bold uppercase mb-2">分类图例</div>
+                                <div className="space-y-1.5">
+                                    {categories.map(c => (
+                                        <div key={c.name} className="flex items-center gap-2">
+                                            <div className={cn("w-2 h-2 rounded-sm shrink-0", c.color)} />
+                                            <span className="text-[9px] text-slate-300 uppercase tracking-wider">{c.name}</span>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
-                        ))}
+                        </div>
                     </div>
                 </div>
 
-                {/* Right: Transition Matrix Mini */}
-                <div className="col-span-4 flex flex-col gap-6">
-                    <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-                        <div className="flex items-center gap-2 mb-6">
-                            <Database size={16} className="text-blue-400" />
-                            <h3 className="text-xs font-bold text-white uppercase tracking-widest font-sans">关键地类变化</h3>
+                {/* Right: Analysis Panel */}
+                <div className="col-span-12 lg:col-span-4 flex flex-col gap-4">
+                    <div className="bg-white/5 border border-white/5 rounded-2xl p-5 flex flex-col gap-4">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                                <PieChart size={14} className="text-emerald-400" />
+                                面积占比统计
+                            </h3>
                         </div>
+                        
                         <div className="space-y-5">
-                            {[
-                                { from: '湿地', to: '深水区', val: '+450 ha', color: 'text-blue-400' },
-                                { from: '农业', to: '城镇', val: '+120 ha', color: 'text-orange-400' },
-                                { from: '裸地', to: '森林', val: '+85 ha', color: 'text-emerald-400' },
-                            ].map((c, i) => (
-                                <div key={i} className="flex flex-col gap-2 p-3 bg-white/[0.02] border border-white/5 rounded-xl">
-                                    <div className="flex items-center gap-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                                        <span>{c.from}</span>
-                                        <ArrowRight size={12} className="text-slate-600" />
-                                        <span>{c.to}</span>
+                            {categories.map(cat => (
+                                <div key={cat.name} className="group">
+                                    <div className="flex justify-between items-end mb-1.5">
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{cat.name}</span>
+                                            <span className="text-[11px] font-mono text-slate-500">{cat.area.toLocaleString()} km²</span>
+                                        </div>
+                                        <span className={cn("text-xs font-bold font-mono", cat.color.replace('bg-', 'text-'))}>{cat.perc}%</span>
                                     </div>
-                                    <div className="flex items-center justify-between mt-1">
-                                         <div className="flex-1 h-1 bg-white/5 rounded-full overflow-hidden mr-4">
-                                             <div className={cn("h-full w-full opacity-40", c.color.replace('text', 'bg'))} />
-                                         </div>
-                                         <span className={cn("text-[10px] font-mono font-bold", c.color)}>{c.val}</span>
+                                    <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                        <motion.div 
+                                            initial={{ width: 0 }}
+                                            animate={{ width: `${cat.perc}%` }}
+                                            transition={{ duration: 1, ease: "easeOut" }}
+                                            className={cn("h-full rounded-full", cat.color)} 
+                                        />
                                     </div>
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-6">
-                        <h4 className="text-[11px] font-bold text-blue-400 uppercase tracking-widest mb-3 flex items-center gap-2 font-sans">
-                            <PieChart size={14} />
-                            GEE 分类引擎
-                        </h4>
-                        <p className="text-[10px] text-slate-500 leading-relaxed font-sans mb-4 italic">
-                            正在接入 Google Earth Engine 二次解译流程。激活 Service Account 以获取最新高分影像。
-                        </p>
-                        <button className="w-full py-2.5 bg-blue-500 text-white text-[10px] font-bold uppercase tracking-widest rounded-lg hover:bg-blue-400 transition-all font-sans">
-                            启动 GEE 转移任务
-                        </button>
+                    <div className="bg-white/5 border border-white/5 rounded-2xl p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div className="flex items-center gap-2 mb-4">
+                                <Info size={14} className="text-blue-400" />
+                                <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">特征空间分析</h3>
+                            </div>
+                            <div className="p-4 bg-blue-500/5 border border-blue-500/10 rounded-xl">
+                                <p className="text-[10px] text-blue-400/80 leading-relaxed font-sans italic">
+                                    当前分类采用随机森林 (Random Forest) 算法，基于 Sentinel-2 十个波段及 NDVI/NDWI 特征指数进行实时推理。
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="mt-4 pt-4 border-t border-white/5 grid grid-cols-2 gap-4">
+                            <div>
+                                <div className="text-[8px] text-slate-500 uppercase font-bold tracking-widest mb-1">总体精度 (OA)</div>
+                                <div className="text-lg font-mono text-emerald-400">92.4%</div>
+                            </div>
+                            <div>
+                                <div className="text-[8px] text-slate-500 uppercase font-bold tracking-widest mb-1">Kappa 系数</div>
+                                <div className="text-lg font-mono text-blue-400">0.89</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

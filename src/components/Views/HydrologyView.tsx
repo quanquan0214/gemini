@@ -1,164 +1,160 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Waves, Droplet, ArrowUpRight, Navigation, Download, Wind, Droplets } from 'lucide-react';
+import { Waves, Droplet, Navigation, Download, Wind, Droplets, Map as MapIcon, Maximize2 } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
-import { Sparkline, BarChart, AreaChart } from '../UI/Charts';
+import { AreaChart } from '../UI/Charts';
 
 const WATER_LEVEL_DATA = Array.from({ length: 48 }, (_, i) => ({ v: 12 + Math.sin(i / 10) * 3 + Math.random() }));
-const PRECIP_DATA = Array.from({ length: 12 }, () => ({ v: 50 + Math.random() * 100 }));
 
 export const HydrologyView = () => {
     return (
-        <div className="flex-1 flex flex-col gap-6 p-6 overflow-y-auto bg-[#0d121f]">
-            <div className="flex items-end justify-between mb-2">
-                <div>
-                    <h2 className="text-2xl font-bold tracking-tight text-white uppercase font-sans">水文系统状态</h2>
-                    <p className="text-slate-500 text-xs font-medium uppercase tracking-widest mt-1">实时水体动力学与流域遥测站高频数据</p>
+        <div className="flex-1 flex flex-col gap-4 p-4 overflow-hidden bg-[#0d121f]">
+            {/* GIS Top Bar */}
+            <div className="flex items-center justify-between px-2">
+                <div className="flex items-center gap-4">
+                    <div className="flex flex-col">
+                        <h2 className="text-xl font-bold tracking-tight text-white uppercase font-sans">水利监测与流域模拟</h2>
+                        <div className="flex items-center gap-3 mt-1">
+                            <span className="text-[9px] text-emerald-400 font-bold uppercase tracking-widest px-2 py-0.5 bg-emerald-500/10 rounded flex items-center gap-1.5">
+                                <div className="w-1 h-1 bg-emerald-400 rounded-full animate-pulse" />
+                                实时遥测流中
+                            </span>
+                            <span className="text-[9px] text-slate-500 font-mono uppercase">Reference: WGS 84 / EPSG:4326</span>
+                        </div>
+                    </div>
                 </div>
-                <button className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 transition-colors flex items-center gap-2 font-sans">
-                    <Download size={14} />
-                    导出水文日报
-                </button>
+                <div className="flex gap-2">
+                    <button className="px-3 py-1.5 bg-white/5 border border-white/10 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 transition-colors flex items-center gap-2 font-sans group">
+                        <Navigation size={12} className="group-hover:rotate-45 transition-transform" />
+                        空间定位
+                    </button>
+                    <button className="px-3 py-1.5 bg-emerald-500 text-black rounded text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-400 transition-colors flex items-center gap-2 font-sans">
+                        <Download size={12} />
+                        报表导出
+                    </button>
+                </div>
             </div>
 
-            <div className="grid grid-cols-12 gap-6">
-                {/* Stats Grid */}
-                <div className="col-span-12 grid grid-cols-4 gap-6">
-                    {[
-                        { label: "平均水位 (吴淞)", value: "12.4", unit: "m", icon: Droplets, color: "text-blue-400", change: "+1.2环比" },
-                        { label: "水体透明度 SD", value: "0.85", unit: "m", icon: Waves, color: "text-emerald-400", change: "-5%环比" },
-                        { label: "湖心流速", value: "0.45", unit: "m/s", icon: Navigation, color: "text-orange-400", change: "稳定" },
-                        { label: "溶解氧 (DO)", value: "8.2", unit: "mg/L", icon: Wind, color: "text-teal-400", change: "优化" },
-                    ].map((stat, i) => (
-                        <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col gap-3 bento-card">
-                            <div className="flex justify-between items-center mb-1">
-                                <stat.icon size={18} className={stat.color} />
-                                <span className={cn("text-[9px] font-bold uppercase tracking-widest", stat.color)}>{stat.change}</span>
+            <div className="flex-1 grid grid-cols-12 gap-4 min-h-0">
+                {/* Left: Spatial Side (The Map) */}
+                <div className="col-span-12 lg:col-span-7 flex flex-col gap-4">
+                    <div className="flex-1 relative bg-slate-900 rounded-2xl border border-white/5 overflow-hidden group">
+                        {/* Simulation of a Map */}
+                        <div className="absolute inset-0 opacity-40 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:20px_20px]" />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="text-center">
+                                <Waves size={48} className="text-blue-500/20 mx-auto mb-3" />
+                                <p className="text-[10px] text-slate-600 font-bold uppercase tracking-[0.3em]">水位空间分布场 - 渲染中</p>
                             </div>
-                            <div className="flex flex-col">
-                                <span className="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1">{stat.label}</span>
-                                <div className="flex items-baseline gap-1">
-                                    <span className="text-3xl font-light text-white tracking-tight">{stat.value}</span>
-                                    <span className="text-xs text-slate-500 font-sans">{stat.unit}</span>
+                        </div>
+
+                        {/* Map HUD */}
+                        <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
+                            <div className="bg-slate-900/80 backdrop-blur-md p-3 border border-white/10 rounded-xl">
+                                <div className="text-[9px] text-slate-500 font-bold uppercase mb-2">活跃传感器</div>
+                                <div className="space-y-1.5">
+                                    {['ST-XINGZI', 'ST-HUKOU', 'ST-DUCHANG'].map(s => (
+                                        <div key={s} className="flex items-center gap-2 text-[10px] text-white/80 font-mono">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                                            {s}
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
-                    ))}
-                </div>
 
-                {/* Main Hydro Graph */}
-                <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="col-span-8 bg-white/5 border border-white/10 rounded-2xl p-8 relative overflow-hidden h-[450px] flex flex-col"
-                >
-                    <div className="flex justify-between items-start mb-12">
-                        <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center">
-                                <Waves size={20} className="text-blue-500" />
-                            </div>
-                            <div>
-                                <h3 className="text-xl font-bold text-white uppercase tracking-tight font-sans">星库水位站 - 实测时序趋势</h3>
-                                <p className="text-[10px] text-slate-500 uppercase font-bold tracking-[0.2em] mt-1 italic">T-48H 连续监测精度 ±0.01m</p>
-                            </div>
-                        </div>
-                        <div className="flex gap-4">
-                            <div className="text-right">
-                                <span className="text-[10px] text-slate-500 uppercase font-bold">入流量</span>
-                                <p className="text-sm font-mono text-emerald-400">2,450 m³/s</p>
-                            </div>
-                            <div className="text-right">
-                                <span className="text-[10px] text-slate-500 uppercase font-bold">出流量</span>
-                                <p className="text-sm font-mono text-orange-400">1,820 m³/s</p>
-                            </div>
+                        <div className="absolute bottom-4 right-4 flex flex-col gap-2">
+                             <button className="p-2 bg-slate-900/80 backdrop-blur-md border border-white/10 rounded-lg text-white hover:bg-slate-800 transition-all">
+                                <Maximize2 size={16} />
+                             </button>
                         </div>
                     </div>
-                    
-                    <div className="flex-1 relative border-l border-b border-white/5">
-                        <div className="absolute inset-0">
-                             <AreaChart data={WATER_LEVEL_DATA} color="#3b82f6" height={260} />
-                        </div>
-                    </div>
-                    <div className="flex justify-between mt-4 text-[9px] font-mono text-slate-600 uppercase tracking-widest">
-                        <span>24H 前</span>
-                        <span>12H 前</span>
-                        <span>当前时刻</span>
-                    </div>
-                </motion.div>
 
-                {/* Hydro Stats Sidebar */}
-                <div className="col-span-4 flex flex-col gap-6">
-                    <div className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col justify-between h-full">
-                        <div>
-                            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-8">入断面数据解析</h3>
-                            <div className="space-y-6 font-sans">
-                                {[
-                                    { name: '赣江', val: '450 m³/s', perc: 45, color: 'bg-blue-500' },
-                                    { name: '修河', val: '120 m³/s', perc: 12, color: 'bg-emerald-500' },
-                                    { name: '饶河', val: '85 m³/s', perc: 8, color: 'bg-orange-500' },
-                                    { name: '信江', val: '180 m³/s', perc: 18, color: 'bg-cyan-500' },
-                                ].map(river => (
-                                    <div key={river.name} className="flex flex-col gap-2">
-                                        <div className="flex justify-between items-center text-[11px]">
-                                            <span className="font-bold text-slate-300">{river.name}</span>
-                                            <span className="font-mono text-slate-400">{river.val}</span>
-                                        </div>
-                                        <div className="h-1 bg-white/5 rounded-full overflow-hidden">
-                                            <motion.div initial={{ width: 0 }} animate={{ width: `${river.perc * 2}%` }} className={cn("h-full", river.color)} />
-                                        </div>
-                                    </div>
-                                ))}
+                    {/* Quick Stats Grid under map */}
+                    <div className="grid grid-cols-4 gap-4">
+                        {[
+                            { label: "平均水位", value: "12.4", unit: "m", color: "text-blue-400" },
+                            { label: "入库流量", value: "2450", unit: "m³/s", color: "text-emerald-400" },
+                            { label: "出库流量", value: "1820", unit: "m³/s", color: "text-orange-400" },
+                            { label: "库容百分比", value: "68", unit: "%", color: "text-teal-400" },
+                        ].map((s, i) => (
+                            <div key={i} className="bg-white/5 border border-white/5 rounded-xl p-3">
+                                <div className="text-[9px] text-slate-500 uppercase font-bold tracking-widest mb-1">{s.label}</div>
+                                <div className="flex items-baseline gap-1">
+                                    <span className={cn("text-lg font-bold font-mono", s.color)}>{s.value}</span>
+                                    <span className="text-[9px] text-slate-600">{s.unit}</span>
+                                </div>
                             </div>
-                        </div>
-
-                        <div className="mt-8 p-4 bg-blue-500/5 border border-blue-500/10 rounded-xl">
-                            <p className="text-[10px] text-blue-400/80 leading-relaxed font-sans italic">
-                                正在采用 GEE 云端计算引擎分析流域地表水动态演变，当前计算任务队列正常。
-                            </p>
-                        </div>
+                        ))}
                     </div>
                 </div>
 
-                {/* Stations Table */}
-                <div className="col-span-12 bg-white/5 border border-white/10 rounded-2xl p-8">
-                    <div className="flex items-center justify-between mb-8">
-                        <div className="flex items-center gap-3">
-                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                             <h3 className="text-sm font-bold text-white uppercase tracking-widest font-sans">骨干遥测站实时报送</h3>
-                        </div>
-                        <button className="text-[10px] font-bold text-blue-400 uppercase tracking-widest hover:text-blue-300 transition-colors">展开全部站点</button>
+                {/* Right: Data Side */}
+                <div className="col-span-12 lg:col-span-5 flex flex-col gap-4 overflow-hidden">
+                    {/* Time Series Section */}
+                    <div className="bg-white/5 border border-white/5 rounded-2xl p-5 flex flex-col shrink-0">
+                         <div className="flex items-center justify-between mb-6">
+                            <h3 className="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                                <Waves size={14} className="text-blue-500" />
+                                实测时序趋势分析
+                            </h3>
+                            <select className="bg-slate-900 border border-white/10 rounded px-2 py-1 text-[9px] text-slate-400 font-bold uppercase tracking-widest outline-none">
+                                <option>Past 48 Hours</option>
+                                <option>Past 7 Days</option>
+                            </select>
+                         </div>
+                         <div className="h-48 relative border-l border-b border-white/5">
+                            <AreaChart data={WATER_LEVEL_DATA} color="#3b82f6" height={190} />
+                         </div>
+                         <div className="flex justify-between mt-3 text-[9px] font-mono text-slate-600 uppercase tracking-widest">
+                            <span>48H AGO</span>
+                            <span>24H AGO</span>
+                            <span>CURRENT</span>
+                         </div>
                     </div>
-                    <table className="w-full text-left">
-                        <thead>
-                            <tr className="border-b border-white/10 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                                <th className="pb-6">站点编号</th>
-                                <th className="pb-6">空间位置</th>
-                                <th className="pb-6">实测水位 (m)</th>
-                                <th className="pb-6">24H 变化</th>
-                                <th className="pb-6 font-sans">数据状态</th>
-                            </tr>
-                        </thead>
-                        <tbody className="text-xs font-mono">
-                            {[
-                                { id: 'ST-XINGZI', loc: '星子', lvl: '12.45', delta: '+0.12', status: '在线' },
-                                { id: 'ST-HUKOU', loc: '湖口', lvl: '11.82', delta: '-0.05', status: '在线' },
-                                { id: 'ST-DUCHANG', loc: '都昌', lvl: '13.10', delta: '+0.24', status: '在线' },
-                                { id: 'ST-KANGSHAN', loc: '康山', lvl: '10.95', delta: '+0.08', status: '在线' },
-                            ].map((s) => (
-                                <tr key={s.id} className="border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors">
-                                    <td className="py-5 text-slate-500">{s.id}</td>
-                                    <td className="py-5 text-white font-sans font-medium">{s.loc}</td>
-                                    <td className="py-5 text-emerald-400 font-bold">{s.lvl}</td>
-                                    <td className={cn("py-5 font-bold", s.delta.startsWith('+') ? 'text-emerald-400' : 'text-orange-400')}>{s.delta}</td>
-                                    <td className="py-5">
-                                        <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[9px] font-bold uppercase tracking-widest border border-emerald-500/20">
-                                            {s.status}
-                                        </span>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+
+                    {/* Table Section - Scrolled */}
+                    <div className="bg-white/5 border border-white/5 rounded-2xl p-5 flex-1 flex flex-col overflow-hidden">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">关键遥测断面列表</h3>
+                            <button className="text-[9px] text-blue-400 font-bold uppercase tracking-widest hover:text-blue-300">管理站点</button>
+                        </div>
+                        <div className="flex-1 overflow-y-auto">
+                            <table className="w-full text-left">
+                                <thead className="sticky top-0 bg-[#161b2a] z-10">
+                                    <tr className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
+                                        <th className="py-2">Station</th>
+                                        <th className="py-2">Level</th>
+                                        <th className="py-2">24H Δ</th>
+                                        <th className="py-2 text-right">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="text-[11px] font-mono">
+                                    {[
+                                        { id: 'ST-XINGZI', lvl: '12.45', delta: '+0.12', status: 'OK' },
+                                        { id: 'ST-HUKOU', lvl: '11.82', delta: '-0.05', status: 'OK' },
+                                        { id: 'ST-DUCHANG', lvl: '13.10', delta: '+0.24', status: 'OK' },
+                                        { id: 'ST-KANGSHAN', lvl: '10.95', delta: '+0.08', status: 'OK' },
+                                        { id: 'ST-WANG', lvl: '12.10', delta: '+0.02', status: 'OFF' },
+                                    ].map((s) => (
+                                        <tr key={s.id} className="border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors">
+                                            <td className="py-3 text-white font-bold">{s.id.replace('ST-', '')}</td>
+                                            <td className="py-3 text-emerald-400">{s.lvl}m</td>
+                                            <td className={cn("py-3", s.delta.startsWith('+') ? 'text-emerald-400' : 'text-orange-400')}>{s.delta}</td>
+                                            <td className="py-3 text-right">
+                                                <span className={cn(
+                                                    "px-1.5 py-0.5 rounded-sm text-[8px] font-bold uppercase",
+                                                    s.status === 'OK' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-500/10 text-slate-500'
+                                                )}>
+                                                    {s.status}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -19,13 +19,18 @@ async function startServer() {
     return new Promise((resolve, reject) => {
       const privateKey = process.env.GEE_PRIVATE_KEY?.replace(/\\n/g, '\n');
       const serviceAccount = process.env.GEE_SERVICE_ACCOUNT;
+      const projectId = serviceAccount?.split('@')[1]?.split('.')[0];
 
       if (!privateKey || !serviceAccount) {
         console.warn("GEE credentials missing. GEE features will be disabled.");
         return resolve(false);
       }
 
-      console.log("Initializing Earth Engine with Service Account...");
+      console.log(`Initializing Earth Engine for project: ${projectId}`);
+      
+      // Set base URL for API requests
+      ee.data.setBaseUrl('https://earthengine.googleapis.com/v1');
+      
       ee.data.authenticateViaServiceAccount(
         { client_email: serviceAccount, private_key: privateKey },
         () => {
@@ -39,7 +44,8 @@ async function startServer() {
             (err: any) => {
               console.error("Earth Engine initialization failed:", err);
               reject(err);
-            }
+            },
+            true // Use cloud-api
           );
         },
         (err: any) => {

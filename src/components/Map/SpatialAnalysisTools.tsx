@@ -22,7 +22,7 @@ export const SpatialAnalysisTools = () => {
     ];
 
     return (
-        <div className="absolute top-20 right-6 z-10 bg-[#0B0F1A]/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl p-4 w-48">
+        <div className="bg-[#0B0F1A]/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl p-4 w-48">
             <h3 className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-4 flex items-center gap-2">
                 <Shapes size={12} className="text-emerald-400" />
                 空间分析工具

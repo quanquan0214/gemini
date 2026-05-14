@@ -10,7 +10,7 @@ const legendData = [
 
 export const MapLegend = () => {
     return (
-        <div className="absolute bottom-24 left-6 z-10 bg-[#0B0F1A]/90 backdrop-blur-xl border border-white/10 rounded-xl p-4 shadow-2xl">
+        <div className="bg-[#0B0F1A]/90 backdrop-blur-xl border border-white/10 rounded-xl p-4 shadow-2xl">
             <h4 className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-3">分类图例说明</h4>
             <div className="space-y-2">
                 {[

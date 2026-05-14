@@ -15,7 +15,7 @@ export const TimeSlider = () => {
     const togglePlay = () => setIsPlaying(!isPlaying);
 
     return (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 w-full max-w-2xl px-6">
+        <div className="w-full max-w-2xl px-6">
             <div className="bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-2xl">
                 <div className="flex items-center gap-6">
                     {/* Controls */}

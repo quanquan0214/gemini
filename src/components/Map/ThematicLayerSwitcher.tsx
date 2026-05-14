@@ -19,7 +19,7 @@ const layers: LayerItem[] = [
 
 export const ThematicLayerSwitcher = () => {
   return (
-    <div className="absolute top-20 left-6 z-10 w-56 bg-[#0B0F1A]/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl p-4">
+    <div className="w-56 bg-[#0B0F1A]/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl p-4">
       <div className="flex items-center gap-2 mb-4">
         <Layers size={14} className="text-emerald-400" />
         <h3 className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500">专项专题图层</h3>

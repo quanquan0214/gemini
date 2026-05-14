@@ -1,117 +1,143 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Thermometer, CloudRain, Wind, Eye, AlertTriangle, Download } from 'lucide-react';
-import { Sparkline, BarChart } from '../UI/Charts';
+import { CloudRain, Thermometer, Wind, Eye, Droplet, Sun, Download, Map as MapIcon, Maximize2, Activity } from 'lucide-react';
+import { cn } from '@/src/lib/utils';
+import { Sparkline, AreaChart } from '../UI/Charts';
 
-const TEMP_DATA = Array.from({ length: 24 }, (_, i) => ({ v: 22 + Math.sin(i / 3) * 5 + Math.random() }));
-const WIND_DATA = Array.from({ length: 24 }, () => ({ v: 5 + Math.random() * 15 }));
+const TEMP_SERIES = Array.from({ length: 48 }, (_, i) => ({ v: 18 + Math.sin(i / 12) * 8 + Math.random() * 2 }));
 
 export const MeteorologyView = () => {
     return (
-        <div className="flex-1 flex flex-col gap-6 p-6 overflow-y-auto bg-[#0d121f]">
-            <div className="flex items-end justify-between mb-2">
-                <div>
-                    <h2 className="text-2xl font-bold tracking-tight text-white uppercase font-sans">气象观测情报</h2>
-                    <p className="text-slate-500 text-xs font-medium uppercase tracking-widest mt-1">大气动力学与季节性预报</p>
+        <div className="flex-1 flex flex-col gap-4 p-4 overflow-hidden bg-[#0d121f]">
+            {/* GIS Top Bar */}
+            <div className="flex items-center justify-between px-2">
+                <div className="flex items-center gap-4">
+                    <div className="flex flex-col">
+                        <h2 className="text-xl font-bold tracking-tight text-white uppercase font-sans">气象环境空间监测</h2>
+                        <div className="flex items-center gap-3 mt-1">
+                            <span className="text-[9px] text-cyan-400 font-bold uppercase tracking-widest px-2 py-0.5 bg-cyan-500/10 rounded flex items-center gap-1.5">
+                                <Activity size={10} />
+                                ERA5 Reanalysis 同步中
+                            </span>
+                            <span className="text-[9px] text-slate-500 font-mono uppercase">Update: 15 mins ago</span>
+                        </div>
+                    </div>
                 </div>
-                <button className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 transition-colors flex items-center gap-2 font-sans">
-                    <Download size={14} />
-                    导出每日气象报表
-                </button>
+                <div className="flex gap-2">
+                    <button className="px-3 py-1.5 bg-white/5 border border-white/10 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 transition-colors flex items-center gap-2 font-sans group">
+                        <Maximize2 size={12} />
+                        全屏投影
+                    </button>
+                    <button className="px-3 py-1.5 bg-cyan-500 text-black rounded text-[10px] font-bold uppercase tracking-widest hover:bg-cyan-400 transition-colors flex items-center gap-2 font-sans">
+                        <Download size={12} />
+                        气象栅格导出
+                    </button>
+                </div>
             </div>
 
-            <div className="grid grid-cols-4 gap-6">
-                {[
-                    { label: "月均温度", value: "24.5", unit: "°C", icon: Thermometer, color: "text-orange-400", data: TEMP_DATA, sparkColor: "#fb923c" },
-                    { label: "累计降水量", value: "125", unit: "mm", icon: CloudRain, color: "text-blue-400", isBar: true },
-                    { label: "平均风速", value: "4.2", unit: "m/s", icon: Wind, color: "text-teal-400", data: WIND_DATA, sparkColor: "#2dd4bf" },
-                    { label: "能见度", value: "12.4", unit: "km", icon: Eye, color: "text-slate-400" },
-                ].map((m, i) => (
-                    <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col gap-4">
-                        <div className="flex justify-between items-start">
-                            <m.icon size={20} className={m.color} />
-                            <span className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">{m.label}</span>
-                        </div>
-                        <div className="flex items-baseline gap-1">
-                            <span className="text-3xl font-light text-white tracking-tight">{m.value}</span>
-                            <span className="text-xs text-slate-500">{m.unit}</span>
-                        </div>
-                        {m.data && (
-                            <div className="h-10 mt-2">
-                                <Sparkline data={m.data} color={m.sparkColor} height={40} />
-                            </div>
-                        )}
-                        {m.isBar && (
-                            <div className="h-10 mt-2">
-                                <BarChart data={TEMP_DATA.slice(0, 12)} color="#60a5fa" />
-                            </div>
-                        )}
-                    </div>
-                ))}
+            <div className="flex-1 grid grid-cols-12 gap-4 min-h-0">
+                {/* Left: Meteorology Heatmap */}
+                <div className="col-span-12 lg:col-span-7 flex flex-col gap-4">
+                    <div className="flex-1 relative bg-slate-900 rounded-2xl border border-white/5 overflow-hidden group">
+                        {/* Map Overlay Simulation (Atmospheric Heatmap) */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/20 via-slate-900 to-indigo-900/20" />
+                        <div className="absolute inset-0 opacity-30 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]" />
+                        
+                        {/* Thermal Plumes simulation */}
+                        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-orange-500/10 blur-[80px] rounded-full animate-pulse" />
+                        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-500/10 blur-[100px] rounded-full animate-pulse" />
 
-                <motion.div 
-                    initial={{ opacity: 0, scale: 0.98 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="col-span-3 bg-white/5 border border-white/10 rounded-2xl p-8 h-[400px] flex flex-col"
-                >
-                    <div className="flex justify-between items-start mb-8">
-                        <div>
-                            <h3 className="text-xl font-bold text-white uppercase tracking-tight font-sans">季节性降水偏差分析</h3>
-                            <p className="text-[10px] text-slate-500 uppercase font-bold tracking-[0.2em] mt-2">历史距平值 vs 当前时期 (GEE 全球降水监测网)</p>
-                        </div>
-                        <div className="flex items-center gap-6 font-sans">
-                            <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 rounded-full bg-slate-700" />
-                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">五年均值</span>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="text-center">
+                                <Thermometer size={48} className="text-cyan-500/20 mx-auto mb-3" />
+                                <p className="text-[10px] text-slate-600 font-bold uppercase tracking-[0.3em]">气温空间场 (2m Temperature)</p>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">当前实测</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div className="flex-1 relative border-l border-b border-white/5 min-h-0">
-                         <div className="absolute inset-0 flex items-end">
-                            <Sparkline data={TEMP_DATA.map(v => ({ v: v.v * 1.1 + 2 }))} color="#1e293b" height={220} filled={false} />
-                         </div>
-                         <div className="absolute inset-0 flex items-end">
-                            <Sparkline data={TEMP_DATA} color="#10b981" height={220} filled={true} />
-                         </div>
-                    </div>
-                    <div className="flex justify-between mt-4 text-[9px] font-mono text-slate-600 uppercase tracking-widest">
-                        <span>T-48H</span>
-                        <span>T-24H</span>
-                        <span>Now</span>
-                    </div>
-                </motion.div>
-
-                <div className="col-span-1 bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col gap-6">
-                    <h3 className="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2 font-sans">
-                         <AlertTriangle size={14} className="text-orange-400" />
-                         实时预警
-                    </h3>
-                    <div className="space-y-4 font-sans">
-                        <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-xl">
-                            <div className="flex items-center gap-2 mb-2">
-                                <div className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse" />
-                                <span className="text-[10px] font-bold text-orange-400 uppercase tracking-widest">高温预警</span>
-                            </div>
-                            <p className="text-[11px] text-slate-400 leading-relaxed">南部区域 LST 地表温度上升明显。火险等级: 3级。</p>
                         </div>
 
-                        <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
-                            <div className="flex items-center gap-2 mb-2">
-                                <div className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-                                <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest">强降水径流</span>
+                        {/* Coordinate Grid Overlay */}
+                        <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-20">
+                            <defs>
+                                <pattern id="geo-grid" width="60" height="60" patternUnits="userSpaceOnUse">
+                                    <path d="M 60 0 L 0 0 0 60" fill="none" stroke="white" strokeWidth="0.5" />
+                                </pattern>
+                            </defs>
+                            <rect width="100%" height="100%" fill="url(#geo-grid)" />
+                        </svg>
+
+                        {/* Map UI */}
+                        <div className="absolute bottom-4 left-4 z-10">
+                            <div className="bg-slate-900/80 backdrop-blur-md p-2 px-3 border border-white/10 rounded-lg flex items-center gap-4">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-24 h-2 bg-gradient-to-r from-blue-600 via-emerald-500 to-red-600 rounded-full" />
+                                    <span className="text-[8px] text-slate-400 font-mono">12°C - 34°C</span>
+                                </div>
                             </div>
-                            <p className="text-[11px] text-slate-400 leading-relaxed">上游泄洪量激增。建议调整站点采样频率。</p>
                         </div>
                     </div>
 
-                    <button className="w-full mt-auto py-3 bg-emerald-500 text-black rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-400 transition-all font-sans">
-                        生成详细预报报告
-                    </button>
+                    <div className="grid grid-cols-3 gap-4 shrink-0">
+                        {[
+                            { label: "平均气温", value: "24.5", unit: "°C", icon: Thermometer, color: "text-orange-400" },
+                            { label: "相对湿度", value: "72", unit: "%", icon: Droplet, color: "text-blue-400" },
+                            { label: "平均风速", value: "4.2", unit: "m/s", icon: Wind, color: "text-emerald-400" },
+                        ].map((s, i) => (
+                            <div key={i} className="bg-white/5 border border-white/5 rounded-xl p-4">
+                                <div className="flex justify-between items-start mb-2">
+                                    <span className="text-[9px] text-slate-500 uppercase font-bold tracking-widest">{s.label}</span>
+                                    <s.icon size={12} className={s.color} />
+                                </div>
+                                <div className="flex items-baseline gap-1">
+                                    <span className={cn("text-xl font-bold font-mono", s.color)}>{s.value}</span>
+                                    <span className="text-[10px] text-slate-600">{s.unit}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Right: Analytical Side */}
+                <div className="col-span-12 lg:col-span-5 flex flex-col gap-4 overflow-hidden">
+                    <div className="bg-white/5 border border-white/5 rounded-2xl p-5 flex flex-col shrink-0">
+                        <div className="flex items-center justify-between mb-6">
+                            <h3 className="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                                <Sun size={14} className="text-orange-400" />
+                                气温 48H 变化序列
+                            </h3>
+                            <button className="text-[9px] text-slate-500 font-bold uppercase tracking-widest border border-white/10 px-2 py-1 rounded">2m Temp</button>
+                        </div>
+                        <div className="h-40">
+                             <AreaChart data={TEMP_SERIES} color="#f97316" height={160} />
+                        </div>
+                    </div>
+
+                    <div className="bg-white/5 border border-white/5 rounded-2xl p-5 flex-1 flex flex-col overflow-hidden">
+                        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">区域气象特征</h3>
+                        <div className="space-y-3 flex-1 overflow-y-auto pr-2">
+                            {[
+                                { label: '总云量 (TCC)', val: '42%', color: 'bg-slate-400' },
+                                { label: '短波辐射 (SSR)', val: '185 W/m²', color: 'bg-orange-500' },
+                                { label: '露点温度', val: '18.2 °C', color: 'bg-blue-400' },
+                                { label: '大气压力', val: '1012 hPa', color: 'bg-cyan-500' },
+                                { label: '能见度', val: '12.4 km', color: 'bg-emerald-400' },
+                            ].map(item => (
+                                <div key={item.label} className="p-3 bg-white/[0.02] border border-white/5 rounded-xl hover:bg-white/5 transition-colors">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wide">{item.label}</span>
+                                        <span className="text-[11px] font-mono font-bold text-white">{item.val}</span>
+                                    </div>
+                                    <div className="mt-2 h-0.5 bg-white/5 w-full rounded-full overflow-hidden">
+                                        <div className={cn("h-full opacity-60", item.color)} style={{ width: '60%' }} />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="mt-4 pt-4 border-t border-white/5">
+                            <div className="flex items-center gap-3">
+                                <div className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                                <span className="text-[9px] text-cyan-400 uppercase font-bold tracking-widest italic">气象同化完成</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
